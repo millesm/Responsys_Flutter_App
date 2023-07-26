@@ -1,0 +1,46 @@
+{
+  "name": "pushiomanager_flutter",
+  "version": "6.54.0",
+  "summary": "Flutter Plugin for Responsys Mobile SDK",
+  "description": "Flutter Plugin for Responsys Mobile SDK",
+  "homepage": "https://www.github.com/oracle/pushiomanager-flutter",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Oracle Corp.": "neerhaj.joshi@oracle.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "public_header_files": "Classes/**/*.h",
+  "dependencies": {
+    "Flutter": [
+
+    ]
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "preserve_paths": "PushIOManager.xcframework/**/*",
+  "xcconfig": {
+    "OTHER_LDFLAGS": "-framework PushIOManager -ObjC"
+  },
+  "vendored_frameworks": "PushIOManager.xcframework",
+  "libraries": "sqlite3",
+  "frameworks": [
+    "UserNotifications",
+    "CoreLocation",
+    "Foundation",
+    "UIKit"
+  ],
+  "ios": {
+    "frameworks": "WebKit"
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "i386 arm64",
+    "OTHER_LDFLAGS": "-ObjC"
+  }
+}
