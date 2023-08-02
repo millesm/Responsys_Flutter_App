@@ -21,6 +21,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin flutter_plugin_android_lifecycle, io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new pendo.io.pendo_sdk.PendoFlutterPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin pendo_sdk, pendo.io.pendo_sdk.PendoFlutterPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new com.pushio.manager.flutter.PushIOManagerFlutterPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin pushiomanager_flutter, com.pushio.manager.flutter.PushIOManagerFlutterPlugin", e);

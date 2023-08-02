@@ -1,5 +1,9 @@
 PODS:
   - Flutter (1.0.0)
+  - Pendo (2.22.1.7434)
+  - pendo_sdk (2.22.0):
+    - Flutter
+    - Pendo (~> 2.22.0)
   - pushiomanager_flutter (6.54.0):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
@@ -7,12 +11,19 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - pendo_sdk (from `.symlinks/plugins/pendo_sdk/ios`)
   - pushiomanager_flutter (from `.symlinks/plugins/pushiomanager_flutter/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Pendo
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  pendo_sdk:
+    :path: ".symlinks/plugins/pendo_sdk/ios"
   pushiomanager_flutter:
     :path: ".symlinks/plugins/pushiomanager_flutter/ios"
   webview_flutter_wkwebview:
@@ -20,6 +31,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Pendo: 94bd3a786403717a22ecf7d8d5d6962554582cff
+  pendo_sdk: f24acf2667d1be326705cc8687332234a282060c
   pushiomanager_flutter: 17aab19183cf0d9e22de0e432847a2921ac34aee
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 

@@ -1,0 +1,35 @@
+{
+  "name": "pendo_sdk",
+  "version": "2.22.0",
+  "summary": "Pendo SDK Flutter plugin",
+  "description": "Pendo Flutter plugin",
+  "social_media_url": "https://www.facebook.com/Pendoio/",
+  "documentation_url": "https://help.pendo.io/resources/support-library/unlisted/ios-sdk-integration.html",
+  "homepage": "https://www.pendo.io/",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Pendo.io": "pendo-iOS@pendo.io"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "public_header_files": "Classes/**/*.h",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "VALID_ARCHS[sdk=iphonesimulator*]": "x86_64"
+  },
+  "dependencies": {
+    "Flutter": [
+
+    ],
+    "Pendo": [
+      "~> 2.22.0"
+    ]
+  }
+}

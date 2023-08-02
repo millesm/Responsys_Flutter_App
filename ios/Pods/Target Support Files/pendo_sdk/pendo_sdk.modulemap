@@ -1,0 +1,6 @@
+framework module pendo_sdk {
+  umbrella header "pendo_sdk-umbrella.h"
+
+  export *
+  module * { export * }
+}

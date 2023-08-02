@@ -1,4 +1,6 @@
 ${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh
+${BUILT_PRODUCTS_DIR}/pendo_sdk/pendo_sdk.framework
 ${BUILT_PRODUCTS_DIR}/pushiomanager_flutter/pushiomanager_flutter.framework
 ${BUILT_PRODUCTS_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/Pendo/Pendo.framework/Pendo
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/pushiomanager_flutter/PushIOManager.framework/PushIOManager

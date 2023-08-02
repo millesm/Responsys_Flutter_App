@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:pushiomanager_flutter/geo_region.dart';
 import 'package:pushiomanager_flutter/pushiomanager_flutter.dart';
 
 import 'package:flutter_sample_app/message_center.dart';
+import 'login_screen.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -38,7 +42,8 @@ class MyApp extends StatelessWidget {
               horizontal: 26,
             ),
           )),
-      home: MyHomePage(title: 'Flutter Sample App'),
+//      home: MyHomePage(title: 'Flutter Sample App'),
+      home: LoginScreen(),
     );
   }
 }
@@ -55,6 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController userIdController = new TextEditingController();
   TextEditingController badgeCountController = new TextEditingController();
   TextEditingController iamEventController = new TextEditingController();
+  TextEditingController serviceIdController = new TextEditingController();
+  bool _isVisible = false;
+
+  Future<List<Recommendations>> futureRecommendation;
 
   @override
   void initState() {
@@ -62,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     PushIOManager.setMessageCenterEnabled(false);
     PushIOManager.setMessageCenterEnabled(true);
+//    futureRecommendation = fetchRecommendations();
   }
 
   @override
@@ -76,22 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    RichText(
-                      text: TextSpan(
-                        style: TextStyle(color: Colors.black),
-                        children: [
-                          WidgetSpan(
-//                            child: Icon(Icons.info_sharp, size: 15),
-                            child: Icon(Icons.info, size: 15),
-                          ),
-                          TextSpan(
-                            text:
-                                " Before proceeding, make sure you have downloaded and added the pushio_config.json file in this sample app.",
-                          ),
-                        ],
+                    Card(
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(1.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network('https://picsum.photos/300'),
+                        ),
                       ),
                     ),
-                    Card(
+/*                     Card(
                         margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                         child: Padding(
                             padding: EdgeInsets.all(20),
@@ -129,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                               fontWeight: FontWeight.bold)),
                                     )))
                               ],
-                            ))),
+                             ))),
+*/
                     Card(
                         margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Padding(
@@ -195,6 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: ElevatedButton(
                                       onPressed: () {
                                         trackEngagement();
+//                                        getRecommendations();
                                       },
                                       child: Text('TRACK CONVERSION',
                                           style: TextStyle(
@@ -202,6 +212,95 @@ class _MyHomePageState extends State<MyHomePage> {
                                     )))
                               ],
                             ))),
+                    Card(
+                        margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Text("Recommendations Service",
+                                    style: TextStyle(
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold)),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 15, 0, 30),
+                                    child: Text(
+                                        "Provide a recommendtion service ID to associate this app installation with a recommendation service.  The service ID will be appended to the US based infinity environment",
+                                        style:
+                                            TextStyle(color: Colors.black54))),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 15, 0, 30),
+                                    child: Text(
+                                        "Working service IDs include g4pw19ml, 547yzr4p, 249d8lmr, gmj9yn4n, w4nryrm0 g4pw19ml",
+                                        style:
+                                            TextStyle(color: Colors.black54))),
+                                Container(
+                                    margin: const EdgeInsets.only(
+                                        right: 40, left: 40),
+                                    child: TextField(
+                                        maxLines: 1,
+                                        controller: serviceIdController,
+                                        textInputAction: TextInputAction.done,
+                                        decoration: InputDecoration(
+                                          hintText: "Enter service ID",
+                                        ))),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                                    child: Center(
+                                        child: ElevatedButton(
+                                      onPressed: () {
+                                        futureRecommendation =
+                                            fetchRecommendations();
+                                        setState(() {});
+                                      },
+                                      child: Text('REGISTER SERVICE ID',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                    )))
+                              ],
+                            ))),
+                    FutureBuilder<List<Recommendations>>(
+                      future: futureRecommendation,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                  elevation: 5.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(1.0),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Image.network(
+                                              snapshot.data[index].thumb),
+                                        ),
+                                      ),
+                                      Text(snapshot.data[index].name,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text(snapshot.data[index].currency +
+                                          snapshot.data[index].price),
+                                    ],
+                                  ));
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('${snapshot.error}');
+                        }
+
+                        // By default, show a loading spinner.
+                        return const CircularProgressIndicator();
+                      },
+                    ),
                     Card(
                         margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Padding(
@@ -450,7 +549,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Center(
                           child: Text(
-                              "\u00a9 2021 Oracle and/or its affiliates. All rights reserved.",
+                              "\u00a9 2023 Oracle and/or its affiliates. All rights reserved.",
                               style: TextStyle(
                                   color: Colors.black38, fontSize: 10.0)),
                         ))
@@ -607,5 +706,90 @@ class _MyHomePageState extends State<MyHomePage> {
   showToast(String message) {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<List<Recommendations>> fetchRecommendations() async {
+    final String serviceId = serviceIdController.text;
+
+    String url =
+        'https://us.service.recommendations.ocs.oraclecloud.com/recommendations/api/v1/services/' +
+            serviceId;
+    final headers = {"Content-type": "application/json"};
+    final json = '{"history": [],"sessionHistory": [],"count": 50}';
+
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: json);
+//  final response = await http
+//      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      var recsObjectJson = jsonDecode(response.body)['recommendations'] as List;
+      List<Recommendations> recsObjs = recsObjectJson
+          .map((respJson) => Recommendations.fromJson(respJson))
+          .toList();
+      return (recsObjs);
+
+//      return Recommendations.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<List<Recommendations>> getRecommendations() async {
+    Completer<List<Recommendations>> completer = Completer();
+    RecommendationService.callRecommendations().then((response) {
+//      setState(() {
+//        json.decode(response.body);
+      var recsObjectJson = jsonDecode(response.body)['recommendations'] as List;
+      List<Recommendations> recsObjs = recsObjectJson
+          .map((respJson) => Recommendations.fromJson(respJson))
+          .toList();
+      _isVisible = true;
+      completer.complete(recsObjs);
+      return Future.value(recsObjs);
+//      }      );
+    });
+    return completer.future;
+  }
+}
+
+class RecommendationService {
+  static Future callRecommendations() {
+    String url =
+        'https://us.service.recommendations.ocs.oraclecloud.com/recommendations/api/v1/services/g4pw19ml';
+    final headers = {"Content-type": "application/json"};
+    final json = '{"history": [],"sessionHistory": [],"count": 50}';
+
+    return http.post(Uri.parse(url), headers: headers, body: json);
+  }
+}
+
+class Recommendations {
+  Recommendations(
+      {this.name, this.currency, this.price, this.description, this.thumb});
+  final String name; // String
+  final String currency; // String
+  final String price; // String
+  final String description; // String
+  final String thumb; // URL
+
+//  factory Recommendations.fromJson(Map<String, dynamic> data) {
+  factory Recommendations.fromJson(dynamic data) {
+    final name = data['Name'] as String;
+    final currency = data['Formatted Currency'] as String;
+    final price = data['Formatted Price'] as String;
+    final description = data['Description'] as String;
+    final thumb = data['Thumb Image URL'] as String;
+
+    return Recommendations(
+        name: name,
+        currency: currency,
+        price: price,
+        description: description,
+        thumb: thumb);
   }
 }

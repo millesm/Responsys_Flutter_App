@@ -176,18 +176,24 @@ code_sign_if_enabled() {
 }
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/pendo_sdk/pendo_sdk.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/pushiomanager_flutter/pushiomanager_flutter.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/Pendo/Pendo.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/pushiomanager_flutter/PushIOManager.framework"
 fi
 if [[ "$CONFIGURATION" == "Profile" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/pendo_sdk/pendo_sdk.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/pushiomanager_flutter/pushiomanager_flutter.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/Pendo/Pendo.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/pushiomanager_flutter/PushIOManager.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/pendo_sdk/pendo_sdk.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/pushiomanager_flutter/pushiomanager_flutter.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/Pendo/Pendo.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/pushiomanager_flutter/PushIOManager.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
