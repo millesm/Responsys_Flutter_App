@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isVisible = false;
 
   Future<List<Recommendations>> futureRecommendation;
+  Future<List<DadJoke>> futureDadJoke;
 
   @override
   void initState() {
@@ -71,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     PushIOManager.setMessageCenterEnabled(false);
     PushIOManager.setMessageCenterEnabled(true);
-//    futureRecommendation = fetchRecommendations();
+    futureDadJoke = fetchDadJoke();
   }
 
   @override
@@ -99,6 +100,39 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
+                    FutureBuilder<List<DadJoke>>(
+                      future: futureDadJoke,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                    elevation: 5.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                              10, 15, 10, 15),
+                                          child: Text(snapshot.data[index].text,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                        )
+                                      ],
+                                    ));
+                              });
+                        } else if (snapshot.hasError) {
+                          return Text('${snapshot.error}');
+                        }
+                        // By default, show a loading spinner.
+                        return const CircularProgressIndicator();
+                      },
+                    ),
+
 /*                     Card(
                         margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                         child: Padding(
@@ -204,7 +238,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: ElevatedButton(
                                       onPressed: () {
                                         trackEngagement();
-//                                        getRecommendations();
                                       },
                                       child: Text('TRACK CONVERSION',
                                           style: TextStyle(
@@ -296,7 +329,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         } else if (snapshot.hasError) {
                           return Text('${snapshot.error}');
                         }
-
                         // By default, show a loading spinner.
                         return const CircularProgressIndicator();
                       },
@@ -719,8 +751,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final response =
         await http.post(Uri.parse(url), headers: headers, body: json);
-//  final response = await http
-//      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -730,15 +760,34 @@ class _MyHomePageState extends State<MyHomePage> {
           .map((respJson) => Recommendations.fromJson(respJson))
           .toList();
       return (recsObjs);
-
-//      return Recommendations.fromJson(jsonDecode(response.body));
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load recommendations');
     }
   }
 
+  Future<List<DadJoke>> fetchDadJoke() async {
+    String url = 'https://icanhazdadjoke.com/slack';
+    final headers = {"Accept": "application/json"};
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      var jokeObjectJson = jsonDecode(response.body)['attachments'] as List;
+      List<DadJoke> recsObjs =
+          jokeObjectJson.map((respJson) => DadJoke.fromJson(respJson)).toList();
+      return (recsObjs);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load dad jokes');
+    }
+  }
+
+/* 
   Future<List<Recommendations>> getRecommendations() async {
     Completer<List<Recommendations>> completer = Completer();
     RecommendationService.callRecommendations().then((response) {
@@ -755,9 +804,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     return completer.future;
   }
+ */
 }
 
-class RecommendationService {
+/* class RecommendationService {
   static Future callRecommendations() {
     String url =
         'https://us.service.recommendations.ocs.oraclecloud.com/recommendations/api/v1/services/g4pw19ml';
@@ -767,6 +817,7 @@ class RecommendationService {
     return http.post(Uri.parse(url), headers: headers, body: json);
   }
 }
+ */
 
 class Recommendations {
   Recommendations(
@@ -791,5 +842,17 @@ class Recommendations {
         price: price,
         description: description,
         thumb: thumb);
+  }
+}
+
+class DadJoke {
+  DadJoke({this.text});
+  final String text; // String
+
+//  factory Recommendations.fromJson(Map<String, dynamic> data) {
+  factory DadJoke.fromJson(dynamic data) {
+    final joke = data['text'] as String;
+
+    return DadJoke(text: joke);
   }
 }
